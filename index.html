@@ -3,21 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IIoT Dashboard — Control Industrial</title>
+  <title>Comunicaciones Industriales 2026-1 — IIoT Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* ══════════════════════════════════════════════════════════════════════════
-     * RESET & TOKENS
-     * ══════════════════════════════════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:          #080a0f;
-      --bg2:         #0d1018;
-      --surface:     #111520;
-      --surface2:    #171c2b;
-      --surface3:    #1d2235;
+      --bg:          #06080f;
+      --bg2:         #0b0f1c;
+      --surface:     #0f1422;
+      --surface2:    #141929;
+      --surface3:    #1a2035;
       --border:      rgba(255,255,255,0.06);
       --border2:     rgba(255,255,255,0.11);
 
@@ -25,13 +22,24 @@
       --text-muted:  #5a6278;
       --text-dim:    #3d4460;
 
-      --accent:      #3d7eff;
-      --accent-glow: rgba(61,126,255,0.18);
+      /* Colores institucionales USTA */
+      --usta-blue:       #003087;
+      --usta-blue-light: #1a4faa;
+      --usta-blue-dim:   rgba(0,48,135,0.18);
+      --usta-red:        #c0111f;
+      --usta-red-light:  #e01e2e;
+      --usta-red-dim:    rgba(192,17,31,0.15);
+      --usta-gold:       #c9a84c;
+      --usta-gold-dim:   rgba(201,168,76,0.15);
+
+      /* Conservamos los funcionales del dashboard */
+      --accent:      #1a4faa;
+      --accent-glow: rgba(0,48,135,0.22);
       --green:       #2dd4a0;
       --green-glow:  rgba(45,212,160,0.15);
       --red:         #f05c5c;
       --red-glow:    rgba(240,92,92,0.15);
-      --amber:       #f5a623;
+      --amber:       #c9a84c;
 
       --radius-sm:   6px;
       --radius:      10px;
@@ -39,7 +47,6 @@
 
       --font-ui:     'IBM Plex Sans', sans-serif;
       --font-mono:   'IBM Plex Mono', monospace;
-
       --transition:  0.18s cubic-bezier(0.4,0,0.2,1);
     }
 
@@ -53,9 +60,17 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ══════════════════════════════════════════════════════════════════════════
-     * PANTALLA DE LOGIN
-     * ══════════════════════════════════════════════════════════════════════ */
+    /* ══ FRANJA INSTITUCIONAL GLOBAL ══ */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--usta-blue) 0%, var(--usta-red) 55%, var(--usta-gold) 100%);
+      z-index: 200;
+    }
+
+    /* ══ LOGIN ══ */
     #login-screen {
       position: fixed;
       inset: 0;
@@ -64,10 +79,9 @@
       justify-content: center;
       background: var(--bg);
       z-index: 100;
-      /* Patrón de fondo tipo grid industrial */
       background-image:
-        linear-gradient(rgba(61,126,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(61,126,255,0.03) 1px, transparent 1px);
+        linear-gradient(rgba(0,48,135,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,48,135,0.04) 1px, transparent 1px);
       background-size: 40px 40px;
     }
 
@@ -76,13 +90,11 @@
       pointer-events: none;
     }
 
-    @keyframes fadeOut {
-      to { opacity: 0; transform: scale(1.015); }
-    }
+    @keyframes fadeOut { to { opacity: 0; transform: scale(1.015); } }
 
     .login-box {
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
       padding: 0 24px;
       animation: fadeInUp 0.5s cubic-bezier(0.2,0,0,1) both;
     }
@@ -92,56 +104,81 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Logo en el login */
     .login-logo {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 36px;
+      gap: 14px;
+      margin-bottom: 28px;
     }
 
-    .login-logo-mark {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--accent) 0%, #7b5cf5 100%);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 24px rgba(61,126,255,0.3);
+    .login-logo img {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 2px var(--usta-gold), 0 0 24px rgba(0,48,135,0.4);
     }
 
-    .login-logo-mark svg { width: 20px; height: 20px; }
-
-    .login-logo-text {
-      display: flex;
-      flex-direction: column;
-    }
+    .login-logo-text { display: flex; flex-direction: column; gap: 3px; }
 
     .login-logo-title {
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 600;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.01em;
       color: var(--text);
+      line-height: 1.2;
+    }
+
+    .login-logo-course {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--usta-gold);
+      letter-spacing: 0.05em;
+      font-weight: 500;
     }
 
     .login-logo-sub {
       font-family: var(--font-mono);
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text-muted);
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
     }
 
-    /* Panel del formulario */
     .login-panel {
       background: var(--surface);
-      border: 1px solid var(--border2);
+      border: 1px solid rgba(0,48,135,0.35);
       border-radius: var(--radius-lg);
       padding: 32px;
       box-shadow:
         0 0 0 1px rgba(255,255,255,0.03),
-        0 24px 60px rgba(0,0,0,0.5),
-        0 0 80px rgba(61,126,255,0.06);
+        0 24px 60px rgba(0,0,0,0.6),
+        0 0 80px rgba(0,48,135,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Franja de color en top del panel */
+    .login-panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--usta-blue) 0%, var(--usta-red) 55%, var(--usta-gold) 100%);
+    }
+
+    /* Sutil watermark USTA en el panel */
+    .login-panel::after {
+      content: 'USTA';
+      position: absolute;
+      bottom: 16px;
+      right: 20px;
+      font-size: 48px;
+      font-weight: 700;
+      color: rgba(0,48,135,0.04);
+      letter-spacing: 0.1em;
+      pointer-events: none;
+      user-select: none;
     }
 
     .login-heading {
@@ -149,35 +186,43 @@
       font-weight: 600;
       letter-spacing: -0.02em;
       color: var(--text);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+      margin-top: 8px;
     }
 
     .login-sub {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-muted);
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
-    /* Campos */
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+    .login-error {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: var(--red-glow);
+      border: 1px solid rgba(240,92,92,0.25);
+      border-radius: var(--radius-sm);
+      color: var(--red);
+      font-size: 13px;
       margin-bottom: 16px;
     }
 
+    .login-error.visible { display: flex; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+
     .field label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 500;
       color: var(--text-muted);
-      letter-spacing: 0.04em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       font-family: var(--font-mono);
     }
 
-    .field-input-wrap {
-      position: relative;
-    }
+    .field-input-wrap { position: relative; }
 
     .field-input-wrap svg {
       position: absolute;
@@ -204,34 +249,17 @@
     }
 
     .field input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-glow);
+      border-color: var(--usta-blue-light);
+      box-shadow: 0 0 0 3px rgba(0,48,135,0.2);
     }
 
     .field input::placeholder { color: var(--text-dim); }
 
-    /* Error de login */
-    .login-error {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 12px;
-      background: var(--red-glow);
-      border: 1px solid rgba(240,92,92,0.25);
-      border-radius: var(--radius-sm);
-      color: var(--red);
-      font-size: 13px;
-      margin-bottom: 16px;
-    }
-
-    .login-error.visible { display: flex; }
-
-    /* Botón de acceso */
     .btn-login {
       width: 100%;
       padding: 11px;
       margin-top: 8px;
-      background: var(--accent);
+      background: var(--usta-blue);
       color: #fff;
       border: none;
       border-radius: var(--radius-sm);
@@ -241,19 +269,17 @@
       cursor: pointer;
       letter-spacing: 0.01em;
       transition: background var(--transition), box-shadow var(--transition), transform 0.1s;
-      box-shadow: 0 4px 20px rgba(61,126,255,0.25);
+      box-shadow: 0 4px 20px rgba(0,48,135,0.3);
     }
 
     .btn-login:hover {
-      background: #5a8fff;
-      box-shadow: 0 4px 28px rgba(61,126,255,0.4);
+      background: var(--usta-blue-light);
+      box-shadow: 0 4px 28px rgba(0,48,135,0.45);
     }
 
     .btn-login:active { transform: scale(0.98); }
 
-    /* ══════════════════════════════════════════════════════════════════════════
-     * DASHBOARD (oculto hasta autenticar)
-     * ══════════════════════════════════════════════════════════════════════ */
+    /* ══ DASHBOARD ══ */
     #dashboard {
       display: none;
       grid-template-rows: auto 1fr;
@@ -268,60 +294,60 @@
       animation: fadeInUp 0.4s cubic-bezier(0.2,0,0,1) both;
     }
 
-    /* ══════════════════════════════════════════════════════════════════════════
-     * HEADER
-     * ══════════════════════════════════════════════════════════════════════ */
     header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 20px 0 16px;
-      border-bottom: 1px solid var(--border);
+      padding: 22px 0 16px;
+      border-bottom: 1px solid rgba(0,48,135,0.25);
       margin-bottom: 28px;
       gap: 12px;
       flex-wrap: wrap;
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
 
+    /* Logo USTA en header */
     .logo-mark {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, var(--accent) 0%, #7b5cf5 100%);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 16px rgba(61,126,255,0.22);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 2px var(--usta-gold), 0 0 12px rgba(0,48,135,0.3);
     }
 
-    .logo-mark svg { width: 18px; height: 18px; }
+    .logo-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .header-titles { display: flex; flex-direction: column; gap: 1px; }
 
     .header-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .header-course {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--usta-gold);
+      letter-spacing: 0.06em;
+      font-weight: 500;
     }
 
     .header-subtitle {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text-muted);
       font-family: var(--font-mono);
     }
 
-    /* Zona derecha del header: status + sesión */
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-    /* Badge de conexión */
     .status-bar {
       display: flex;
       align-items: center;
@@ -336,29 +362,17 @@
     }
 
     .status-dot {
-      width: 7px;
-      height: 7px;
+      width: 7px; height: 7px;
       border-radius: 50%;
       flex-shrink: 0;
       transition: background var(--transition);
     }
 
-    .status-dot.connected {
-      background: var(--green);
-      box-shadow: 0 0 6px var(--green);
-    }
+    .status-dot.connected    { background: var(--green); box-shadow: 0 0 6px var(--green); }
+    .status-dot.disconnected { background: var(--red); animation: pulse-red 1.5s ease-in-out infinite; }
 
-    .status-dot.disconnected {
-      background: var(--red);
-      animation: pulse-red 1.5s ease-in-out infinite;
-    }
+    @keyframes pulse-red { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
-    @keyframes pulse-red {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.35; }
-    }
-
-    /* Chip de sesión (usuario + rol) */
     .session-chip {
       display: flex;
       align-items: center;
@@ -372,10 +386,7 @@
       color: var(--text-muted);
     }
 
-    .session-username {
-      color: var(--text);
-      font-weight: 500;
-    }
+    .session-username { color: var(--text); font-weight: 500; }
 
     .role-badge {
       padding: 2px 8px;
@@ -386,19 +397,9 @@
       text-transform: uppercase;
     }
 
-    .role-badge.admin {
-      background: rgba(61,126,255,0.12);
-      color: var(--accent);
-      border: 1px solid rgba(61,126,255,0.22);
-    }
+    .role-badge.admin  { background: var(--usta-blue-dim); color: #7aa0e0; border: 1px solid rgba(0,48,135,0.3); }
+    .role-badge.viewer { background: rgba(90,98,120,0.18); color: var(--text-muted); border: 1px solid var(--border); }
 
-    .role-badge.viewer {
-      background: rgba(90,98,120,0.18);
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-    }
-
-    /* Botón cerrar sesión */
     .btn-logout {
       padding: 4px 10px;
       background: transparent;
@@ -414,21 +415,10 @@
       gap: 5px;
     }
 
-    .btn-logout:hover {
-      background: var(--red-glow);
-      color: var(--red);
-      border-color: rgba(240,92,92,0.25);
-    }
+    .btn-logout:hover { background: var(--red-glow); color: var(--red); border-color: rgba(240,92,92,0.25); }
 
-    /* ══════════════════════════════════════════════════════════════════════════
-     * SEPARADORES DE SECCIÓN
-     * ══════════════════════════════════════════════════════════════════════ */
-    .section-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
+    /* ══ SECTION LABELS ══ */
+    .section-label { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
 
     .section-label-text {
       font-size: 11px;
@@ -440,20 +430,60 @@
       font-family: var(--font-mono);
     }
 
-    .section-label-line {
-      flex: 1;
-      height: 1px;
-      background: var(--border);
+    .section-label-line { flex: 1; height: 1px; background: var(--border); }
+
+    /* ══ SECCIÓN EQUIPO ══ */
+    #team-section { margin-bottom: 32px; }
+
+    .team-grid {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
-    /* ══════════════════════════════════════════════════════════════════════════
-     * PANEL DE ACTUADORES
-     * ══════════════════════════════════════════════════════════════════════ */
-    #actuator-section {
-      margin-bottom: 32px;
+    .team-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      background: var(--surface);
+      border: 1px solid rgba(0,48,135,0.2);
+      border-radius: var(--radius);
+      border-left: 3px solid var(--usta-blue);
     }
 
-    /* Bloque de acceso restringido (visible para rol viewer) */
+    .team-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--usta-blue-dim);
+      border: 1px solid rgba(0,48,135,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: #7aa0e0;
+      flex-shrink: 0;
+      font-family: var(--font-mono);
+    }
+
+    .team-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .team-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+    }
+
+    /* ══ ACTUADORES ══ */
+    #actuator-section { margin-bottom: 32px; }
+
     #actuator-locked {
       display: none;
       align-items: center;
@@ -466,16 +496,9 @@
       font-size: 13px;
     }
 
-    #actuator-locked svg {
-      opacity: 0.4;
-      flex-shrink: 0;
-    }
+    #actuator-locked svg { opacity: 0.4; flex-shrink: 0; }
 
-    .actuator-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 12px;
-    }
+    .actuator-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
 
     .actuator-card {
       background: var(--surface);
@@ -489,24 +512,10 @@
       transition: border-top-color var(--transition), box-shadow var(--transition);
     }
 
-    .actuator-card.is-on {
-      border-top-color: var(--green);
-      box-shadow: 0 0 24px var(--green-glow);
-    }
-
+    .actuator-card.is-on { border-top-color: var(--green); box-shadow: 0 0 24px var(--green-glow); }
     .actuator-meta { display: flex; flex-direction: column; gap: 3px; }
-
-    .actuator-topic {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .actuator-name {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-    }
+    .actuator-topic { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+    .actuator-name  { font-size: 15px; font-weight: 600; color: var(--text); }
 
     .actuator-status {
       display: inline-flex;
@@ -521,26 +530,9 @@
       transition: background var(--transition), color var(--transition);
     }
 
-    .actuator-status::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: currentColor;
-      flex-shrink: 0;
-    }
-
-    .actuator-status.off {
-      background: var(--red-glow);
-      color: var(--red);
-      border: 1px solid rgba(240,92,92,0.2);
-    }
-
-    .actuator-status.on {
-      background: var(--green-glow);
-      color: var(--green);
-      border: 1px solid rgba(45,212,160,0.22);
-    }
+    .actuator-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .actuator-status.off { background: var(--red-glow);   color: var(--red);   border: 1px solid rgba(240,92,92,0.2); }
+    .actuator-status.on  { background: var(--green-glow); color: var(--green); border: 1px solid rgba(45,212,160,0.22); }
 
     .actuator-btns { display: flex; gap: 8px; }
 
@@ -556,34 +548,15 @@
       transition: background var(--transition), transform 0.1s;
     }
 
-    .btn-on {
-      background: rgba(45,212,160,0.06);
-      color: var(--green);
-      border-color: rgba(45,212,160,0.2);
-    }
-
+    .btn-on  { background: rgba(45,212,160,0.06); color: var(--green); border-color: rgba(45,212,160,0.2); }
     .btn-on:hover  { background: rgba(45,212,160,0.14); }
-
-    .btn-off {
-      background: rgba(240,92,92,0.06);
-      color: var(--red);
-      border-color: rgba(240,92,92,0.2);
-    }
-
+    .btn-off { background: rgba(240,92,92,0.06);  color: var(--red);   border-color: rgba(240,92,92,0.2); }
     .btn-off:hover { background: rgba(240,92,92,0.14); }
-
     .btn-act:active   { transform: scale(0.97); }
     .btn-act:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
 
-    /* ══════════════════════════════════════════════════════════════════════════
-     * GRÁFICAS DE SENSORES
-     * ══════════════════════════════════════════════════════════════════════ */
-    #charts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
-      gap: 16px;
-      align-content: start;
-    }
+    /* ══ GRÁFICAS ══ */
+    #charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(520px, 1fr)); gap: 16px; align-content: start; }
 
     .sensor-card {
       background: var(--surface);
@@ -600,79 +573,30 @@
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 2px;
-      background: var(--accent);
+      background: var(--usta-blue);
       opacity: 0;
       transition: opacity var(--transition);
     }
 
     .sensor-card.active::before { opacity: 1; }
 
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      gap: 8px;
-    }
+    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 8px; }
 
-    .card-title {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      font-family: var(--font-mono);
-    }
-
+    .card-title { font-size: 12px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; font-family: var(--font-mono); }
     .card-stats { display: flex; gap: 6px; align-items: center; }
 
-    .stat-chip {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 500;
-      padding: 3px 8px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      color: var(--text);
-      min-width: 72px;
-      text-align: right;
-    }
+    .stat-chip { font-family: var(--font-mono); font-size: 12px; font-weight: 500; padding: 3px 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; color: var(--text); min-width: 72px; text-align: right; }
+    .fps-chip  { color: var(--green); min-width: 56px; }
 
-    .fps-chip { color: var(--green); min-width: 56px; }
+    .sensor-canvas { display: block; width: 100%; height: 180px; border-radius: var(--radius-sm); background: var(--bg2); }
 
-    .sensor-canvas {
-      display: block;
-      width: 100%;
-      height: 180px;
-      border-radius: var(--radius-sm);
-      background: var(--bg2);
-    }
+    .axis-labels { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; padding: 0 2px; }
+    .axis-y-max, .axis-y-min, .axis-x-label { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); }
 
-    .axis-labels {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 6px;
-      padding: 0 2px;
-    }
-
-    .axis-y-max, .axis-y-min, .axis-x-label {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-dim);
-    }
-
-    /* ══════════════════════════════════════════════════════════════════════════
-     * SCROLLBAR
-     * ══════════════════════════════════════════════════════════════════════ */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 
-    /* ══════════════════════════════════════════════════════════════════════════
-     * LIGHT MODE
-     * ══════════════════════════════════════════════════════════════════════ */
     @media (prefers-color-scheme: light) {
       :root {
         --bg:         #f0f2f7;
@@ -685,35 +609,30 @@
         --text:       #111827;
         --text-muted: #6b7280;
         --text-dim:   #9ca3af;
+        --usta-blue-dim: rgba(0,48,135,0.08);
       }
       .sensor-canvas { background: #eef0f7; }
       #login-screen {
         background-image:
-          linear-gradient(rgba(61,126,255,0.04) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(61,126,255,0.04) 1px, transparent 1px);
+          linear-gradient(rgba(0,48,135,0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,48,135,0.04) 1px, transparent 1px);
       }
+      .login-panel::after { color: rgba(0,48,135,0.03); }
     }
   </style>
 </head>
 <body>
 
-  <!-- ══════════════════════════════════════════════════════════════════════════
-       PANTALLA DE LOGIN
-  ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- LOGIN -->
   <div id="login-screen" role="main" aria-label="Acceso al sistema">
     <div class="login-box">
 
       <div class="login-logo">
-        <div class="login-logo-mark" aria-hidden="true">
-          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polyline points="1,14 5,8 9,11 13,4 19,4"
-                      stroke="white" stroke-width="1.8"
-                      stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <img src="/src/logo_santoto.png" alt="Logo Universidad Santo Tomás">
         <div class="login-logo-text">
-          <span class="login-logo-title">IIoT Dashboard</span>
-          <span class="login-logo-sub">Control Industrial · ESP32</span>
+          <span class="login-logo-title">Universidad Santo Tomás</span>
+          <span class="login-logo-course">Comunicaciones Industriales 2026-1</span>
+          <span class="login-logo-sub">IIoT Dashboard · ESP32</span>
         </div>
       </div>
 
@@ -759,34 +678,26 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════════════════════════════
-       DASHBOARD PRINCIPAL
-  ══════════════════════════════════════════════════════════════════════════ -->
+  <!-- DASHBOARD -->
   <div id="dashboard" aria-label="Dashboard IIoT">
 
     <header>
       <div class="header-left">
         <div class="logo-mark" aria-hidden="true">
-          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polyline points="1,14 5,8 9,11 13,4 19,4"
-                      stroke="white" stroke-width="1.8"
-                      stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <img src="/src/logo_santoto.png" alt="Logo USTA">
         </div>
-        <div>
+        <div class="header-titles">
           <div class="header-title">IIoT Dashboard</div>
-          <div class="header-subtitle">Telemetría &amp; Control · ESP32</div>
+          <div class="header-course">Comunicaciones Industriales 2026-1</div>
+          <div class="header-subtitle">Telemetría &amp; Control · ESP32 · Usta Bogotá</div>
         </div>
       </div>
 
       <div class="header-right">
-        <!-- Indicador de conexión al broker -->
         <div class="status-bar" role="status" aria-live="polite">
           <span class="status-dot disconnected" id="status-badge"></span>
           <span id="status-text">Conectando…</span>
         </div>
-
-        <!-- Chip de sesión activa -->
         <div class="session-chip">
           <span class="session-username" id="session-username">—</span>
           <span class="role-badge" id="session-role">—</span>
@@ -804,13 +715,43 @@
 
     <main>
 
-      <!-- Sección actuadores -->
+      <!-- Equipo -->
+      <section id="team-section" aria-label="Equipo">
+        <div class="section-label">
+          <span class="section-label-text">Equipo — Comunicaciones Industriales 2026-1</span>
+          <span class="section-label-line" aria-hidden="true"></span>
+        </div>
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-avatar">AP</div>
+            <div>
+              <div class="team-name">Alejandra Penagos</div>
+              <div class="team-label">Ing. Electrónica</div>
+            </div>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">LS</div>
+            <div>
+              <div class="team-name">Lorenzo Sandoval</div>
+              <div class="team-label">Ing. Electrónica</div>
+            </div>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">HL</div>
+            <div>
+              <div class="team-name">Heyder Largo</div>
+              <div class="team-label">Ing. Electrónica</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Actuadores -->
       <section id="actuator-section" aria-label="Control de actuadores">
         <div class="section-label">
           <span class="section-label-text">Actuadores — ESP32 #2</span>
           <span class="section-label-line" aria-hidden="true"></span>
         </div>
-        <!-- Mensaje para viewers sin acceso -->
         <div id="actuator-locked" role="status">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -819,11 +760,10 @@
           </svg>
           <span>Control de actuadores disponible solo para administradores.</span>
         </div>
-        <!-- Tarjetas de GPIO (solo admin) -->
         <div class="actuator-grid" id="actuator-grid"></div>
       </section>
 
-      <!-- Sección sensores -->
+      <!-- Sensores -->
       <section aria-label="Telemetría analógica">
         <div class="section-label">
           <span class="section-label-text">Sensores ADC — ESP32 #1</span>
@@ -834,6 +774,7 @@
 
     </main>
   </div>
+
   <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
   <script type="module" src="/src/main.js"></script>
 </body>
