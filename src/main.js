@@ -15,7 +15,7 @@ import { login, logout, getSession, hasRole } from './auth.js';
 // Cambia la IP por la de tu servidor EMQX cuando migres de red.
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const BROKER_URL = '44367781418b4a52acdb8043027dba13.s1.eu.hivemq.cloud:8884/mqtt';
+const BROKER_URL = 'wss://44367781418b4a52acdb8043027dba13.s1.eu.hivemq.cloud:8884/mqtt';
 
 const BROKER_OPTIONS = {
   clientId: 'web_dashboard_' + Math.random().toString(16).substring(2, 10),
